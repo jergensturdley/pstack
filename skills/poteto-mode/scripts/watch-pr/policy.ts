@@ -48,9 +48,6 @@ async function mergeAssessment(
 }
 const AUTOMATION_TOKENS = [
   "bugbot",
-  "coderabbit",
-  "greptile",
-  "copilot",
   "security review",
   "pr review automation",
   "review automation",
