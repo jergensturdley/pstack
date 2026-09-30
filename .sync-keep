@@ -1,0 +1,9 @@
+# rsync excludes: leading / anchors to the repo root. /.git is life support:
+# --delete would otherwise remove the repo's own .git directory.
+/.git
+/FORK.md
+/CONVERT.md
+/.gitignore
+/.sync-keep
+/scripts
+node_modules

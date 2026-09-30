@@ -1,9 +1,8 @@
 ---
-metadata:
-  invocation: explicit
 name: typescript-best-practices
 description: TypeScript best practices. Use when reading or editing any .ts or .tsx file.
 paths: ["**/*.ts", "**/*.tsx"]
+disable-model-invocation: true
 ---
 
 # TypeScript best practices

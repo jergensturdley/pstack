@@ -59,8 +59,8 @@ function threadLine(thread: T.ReviewThread): string {
     comment?.path ?? "None",
     comment?.line ?? "None",
     comment?.authorLogin ?? "None",
-    `isReviewBot=${thread.isReviewBot}`,
-    `reviewBotPasses=${thread.reviewBotPasses}`,
+    `isBugBot=${thread.isBugbot}`,
+    `bugbotReviewPasses=${thread.bugbotReviewPasses}`,
     (comment?.body ?? "").split(/\r?\n/, 1)[0]?.slice(0, 180) ?? "",
   ].join(" ");
 }

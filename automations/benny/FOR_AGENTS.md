@@ -29,7 +29,7 @@ i want two agent automations that work together in one slack issue channel.
 - i treat utility and debug bots as evidence, not delegation or fix ownership.
 - i allow subagents to help, but they cannot post to slack or receive slack credentials.
 - i want this entire pack committed at `.agent/automations/benny/` in the target repository. its `SKILL.md` files are direct automation instructions, not registered plugin skills.
-- i want pstack resolvable in the target repository's committed project scope, only for shared dependencies such as `how`, `why`, `tdd`, `unslop`, and the required principle skills.
+- i want pstack enabled through the target repository's committed `.agent/settings.json` only for shared dependencies such as `how`, `why`, `tdd`, `unslop`, and the required principle skills.
 - i want each live automation prompt to read its committed operational file directly. i do not want plugin cache paths, copied excerpts, or slash-skill discovery.
 - i keep user-owned configuration, feature maps, routing maps, and secrets outside `.agent/automations/benny/` so pack refreshes cannot overwrite them.
 - i want both automations to fail closed when channel coordinates, tracker access, the control adapter, or the feature map are missing or uncertain.
@@ -54,7 +54,7 @@ start from [`configuration.example.yaml`](./templates/configuration.example.yaml
 
 ## for the agent
 
-the human enters setup by pointing an agent at this file. do not look for or invoke a discovered benny slash skill.
+the human enters setup by pointing cursor at this file. do not look for or invoke a discovered benny slash skill.
 
 1. ask which repository will run the automations.
 2. treat the directory containing this `FOR_AGENTS.md` as the source pack.
@@ -64,16 +64,26 @@ the human enters setup by pointing an agent at this file. do not look for or inv
 6. verify that the copied `FOR_AGENTS.md` and `skills/setup-benny/SKILL.md` exist in the target repository.
 7. read and follow `.agent/automations/benny/skills/setup-benny/SKILL.md` directly from the target repository.
 
-i want pstack resolvable from the target repository's committed project scope. pick the mechanism the host actually supports: enabling the plugin in a committed project settings file, vendoring `skills/` into the repo, or a submodule. if you edit a settings file, preserve every unrelated setting and plugin, and preserve comments and valid jsonc syntax when the existing file uses jsonc.
+i want you to merge this entry into the target repository's `.agent/settings.json`:
+
+```json
+{
+	"plugins": {
+		"pstack": { "enabled": true }
+	}
+}
+```
+
+preserve every unrelated setting and plugin. preserve comments and valid jsonc syntax when the existing file uses jsonc.
 
 i want verification from a fresh agent rooted in the target repository. confirm that pstack's `how`, `why`, `tdd`, `unslop`, and the principle skills used by benny resolve in project scope. do not count skills loaded from the current session or a user-scoped install.
 
-if project-scoped skills are unavailable or any shared dependency does not resolve, stop and explain what failed. do not add `.agent/automations/benny/skills/` to a plugin manifest or expect its files to appear in the slash-skill list.
+if project-scoped plugins are unavailable or any shared dependency does not resolve, stop and explain what failed. do not add `.agent/automations/benny/skills/` to a plugin manifest or expect its files to appear in the slash-skill list.
 
-tell me that whatever makes pstack resolvable, `.agent/automations/benny/`, and any referenced secret-free configuration must be committed before either automation is enabled. do not create or update an automation until i explicitly ask.
+tell me that `.agent/settings.json`, `.agent/automations/benny/`, and any referenced secret-free configuration must be committed before either automation is enabled. do not create or update an automation until i explicitly ask.
 
-for first-time creation, use the host's own automation-creation flow once for triage and once for repro and fix. complete the draft review, approval, readiness check, and editor handoff for the first automation before starting the second.
+for first-time creation, use built-in `/automate` once for triage and once for repro and fix. complete the draft review, approval, readiness check, and Automations editor handoff for the first automation before starting the second.
 
-paraphrase this intent and the finished configuration into each draft. the triage prompt must read and follow `.agent/automations/benny/skills/triage-issue-reports/SKILL.md`. the repro prompt must read and follow `.agent/automations/benny/skills/reproduce-and-fix-issues/SKILL.md`. use these repo-relative paths only after you confirm they are committed in the repository where the automation will run.
+paraphrase this intent and the finished configuration into each draft. the triage prompt must read and follow `.agent/automations/benny/skills/triage-issue-reports/SKILL.md`. the repro prompt must read and follow `.agent/automations/benny/skills/reproduce-and-fix-issues/SKILL.md`. use these repo-relative paths only after `/automate` confirms they are committed in the repository where the automation will run.
 
-for existing automations, do not use the creation flow to inspect or update them. validate the configuration, then use the concise field checklist in the copied setup file so i can edit each automation directly in its editor. do not create duplicates.
+for existing automations, do not use `/automate` to inspect or update them. validate the configuration, then use the concise field checklist in the copied setup file so i can edit each automation directly in its editor. do not create duplicates.

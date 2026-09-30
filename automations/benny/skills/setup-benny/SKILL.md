@@ -1,17 +1,16 @@
 ---
 name: setup-benny
 description: Configure Benny and prepare its triage and repro automations. Use when installing Benny or changing its Slack, tracker, repository, routing, control, model, or budget settings.
-metadata:
-  invocation: explicit
+disable-model-invocation: true
 ---
 
 # Set up Benny
 
 Benny ships as a dormant automation pack inside pstack. The plugin manifest exposes only pstack's normal skill root; this file and the two operational files are not slash skills.
 
-The human enters setup by pointing an agent at the pack's `FOR_AGENTS.md`. The bootstrap flow copies the whole pack into the target repository, then reads this file directly at `.agent/automations/benny/skills/setup-benny/SKILL.md`.
+The human enters setup by pointing Cursor at the pack's `FOR_AGENTS.md`. The bootstrap flow copies the whole pack into the target repository, then reads this file directly at `.agent/automations/benny/skills/setup-benny/SKILL.md`.
 
-Benny needs external configuration and two live agent automations.
+Benny needs external configuration and two live Cursor automations.
 
 Do not create or update an automation until the user explicitly asks. Never put a secret value in plugin files, prompts, or committed configuration.
 
@@ -32,9 +31,17 @@ Merge the entire source pack into the destination:
 
 If this file is already being read from the target destination, treat the copy as complete and run the same verification before continuing.
 
-Make pstack resolvable from the target repository's project scope. Pick the mechanism the host supports: enabling the plugin in a committed project settings file, vendoring `skills/` into the repo, or a submodule. When you edit a settings file, merge into the existing JSON or JSONC rather than replacing it, and create the file only if it does not exist.
+Add pstack to the target repository's `.agent/settings.json`. If the file or `.agent` directory does not exist, create it.
 
-The automation checks out the repository fresh on every run, so a user-scoped or session-scoped install does not count.
+Merge this entry into the existing JSON or JSONC:
+
+```json
+{
+	"plugins": {
+		"pstack": { "enabled": true }
+	}
+}
+```
 
 Preserve every unrelated top-level setting and every other plugin entry. If `plugins.pstack` already exists, change only its `enabled` value. Preserve comments and valid JSONC syntax when the file uses JSONC. Validate the file after editing it.
 
@@ -57,7 +64,7 @@ If project-scoped plugin installation is unavailable or any shared dependency do
 
 The Benny files are read directly from `.agent/automations/benny/`. Do not add that directory to a plugin manifest or expect its `SKILL.md` files to appear in the slash-skill list.
 
-Tell the user that whatever makes pstack resolvable, `.agent/automations/benny/`, and any referenced secret-free configuration must be committed before either automation is enabled. Do not commit them unless the user asks.
+Tell the user that `.agent/settings.json`, `.agent/automations/benny/`, and any referenced secret-free configuration must be committed before either automation is enabled. Do not commit them unless the user asks.
 
 Once this check passes, live automation prompts may read the committed operational files by their stable repository-relative paths. They must not embed a plugin cache path or copy the file contents.
 
@@ -102,7 +109,7 @@ Ask for or confirm:
 - Polling and effort budgets
 - Model slug for triage, repro, code work, and media review
 
-Use only model slugs shown as available in the host's model picker or supported model list. Do not guess a slug and do not carry over a private default.
+Use only model slugs shown as available in the user's Cursor model picker or supported model list. Do not guess a slug and do not carry over a private default.
 
 The source channel, triage identity, repository, tracker adapter, control skill, and feature map must be explicit. Fail setup if any required value stays ambiguous.
 
@@ -126,7 +133,7 @@ The repro automation needs:
 - A pull request action that can open a draft pull request
 - The configured control-adapter skill
 
-Prefer the host's configured Slack integration for reads and posts. The optional `BENNY_SLACK_BOT_TOKEN` may fill a narrow gap such as editing one operations status message or downloading an attachment. Store the value in a secret manager or environment, not in YAML.
+Prefer configured Cursor Slack actions for reads and posts. The optional `BENNY_SLACK_BOT_TOKEN` may fill a narrow gap such as editing one operations status message or downloading an attachment. Store the value in a secret manager or environment, not in YAML.
 
 Do not use undocumented integration endpoints.
 
@@ -232,11 +239,11 @@ For the existing repro automation, update:
 - Tracker, control-adapter, and feature-map requirements
 - Paraphrased marker wait, evidence, verification, and bounded-fix instructions
 
-Ask the user to update each existing automation directly in the host's automation editor. Do not create replacements or duplicates.
+Ask the user to update each existing automation directly in its Automations editor. Do not create replacements or duplicates.
 
 ### Creation boundary
 
-Never call a direct automation backend service or backend automation tool. Never use a browser URL that carries draft fields. Never build or open an editor protocol deep link. For new automations, the only finish path is the host's own automation-creation flow, with its draft review and editor handoff intact.
+Never call a direct automation backend service or backend automation tool. Never use a browser URL that carries draft fields. Never build or open a Cursor protocol deep link. For new automations, the only finish path is the built-in `automate` skill's reviewed Automations editor handoff.
 
 Do not enable either automation until the thread-safety test passes after the editor save.
 
@@ -244,7 +251,7 @@ Do not enable either automation until the thread-safety test passes after the ed
 
 Use a test channel or a harmless test report.
 
-Before testing, confirm that whatever makes pstack resolvable, `.agent/automations/benny/`, and every referenced secret-free configuration file are committed on the branch used by the automation checkout. Confirm that both live prompts point at their exact committed operational files. If any check fails, stop. Tell the user that the automation cannot be enabled yet.
+Before testing, confirm that the target repository's `.agent/settings.json`, `.agent/automations/benny/`, and every referenced secret-free configuration file are committed on the branch used by the automation checkout. Confirm that both live prompts point at their exact committed operational files. If any check fails, stop. Tell the user that the automation cannot be enabled yet.
 
 Verify:
 

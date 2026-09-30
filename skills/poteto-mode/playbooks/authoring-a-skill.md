@@ -2,7 +2,7 @@
 
 **You own the skill's voice.**
 
-1. Author through the `SKILL_AUTHORING` capability in `../../shared/host-adapter.md`, which falls back to its own authoring conventions when the host ships no such skill.
+1. Use the **create-skill** skill (Cursor's built-in for authoring SKILL.md files).
 2. Validate the skill: frontmatter has `name` and `description`, referenced files exist, cross-skill links resolve.
 3. Test cases if structural. Skip if subjective.
 4. Run **Opening a PR**.
