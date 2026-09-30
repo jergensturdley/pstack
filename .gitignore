@@ -1,0 +1,6 @@
+# build/dependency artifacts (installed on demand by the skills' scripts)
+node_modules/
+
+# cursor plugin registry metadata (local tooling, not part of the pstack fork)
+.jergens/
+.DS_Store
