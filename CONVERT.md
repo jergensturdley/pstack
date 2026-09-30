@@ -38,7 +38,7 @@ Must pass before the conversion commit lands:
 
 ```sh
 grep -rnE 'Cursor chat|\.cursor/rules|\.cursor/automations|\.cursor/settings' \
-  --exclude-dir=node_modules --exclude-dir=.git .
+  --exclude-dir=node_modules --exclude-dir=.git --exclude=CONVERT.md .
 ```
 
 Expected: zero hits. A hit means upstream brought cursor-specific content
