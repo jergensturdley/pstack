@@ -27,6 +27,17 @@ git archive upstream/main:pstack | tar -x -C "$TMP/src"
 
 rsync -a --delete --exclude-from=.sync-keep "$TMP/src/" "$REPO/"
 
+# Re-apply the fork banner to README.md. The sync overwrites README with
+# upstream's copy; the banner goes back on top. Idempotent via the end marker.
+python3 - <<'PY'
+banner = open('scripts/fork-banner.md').read()
+readme = open('README.md').read()
+marker = '<!-- FORK-BANNER-END -->'
+if marker in readme:
+    readme = readme.split(marker, 1)[1].lstrip('\n')
+open('README.md', 'w').write(banner + readme)
+PY
+
 [ -d "$REPO/.git" ] || { echo "FATAL: .git missing after rsync; keep-list is broken" >&2; exit 1; }
 
 git add -A
