@@ -31,7 +31,7 @@ Merge the entire source pack into the destination:
 
 If this file is already being read from the target destination, treat the copy as complete and run the same verification before continuing.
 
-Add pstack to the target repository's `.agent/settings.json`. If the file or `.agent` directory does not exist, create it.
+Add pstack to the target repository's `.agent/settings.json`. If the file or `.cursor` directory does not exist, create it.
 
 Merge this entry into the existing JSON or JSONC:
 
